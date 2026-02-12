@@ -82,6 +82,9 @@ export const CategoryChart: React.FC<CategoryChartProps> = ({ startDate, endDate
                                 borderRadius: 'var(--radius-md)',
                                 color: 'var(--color-text-primary)'
                             }}
+                            itemStyle={{
+                                color: 'var(--color-text-primary)'
+                            }}
                         />
                         <Legend />
                     </PieChart>

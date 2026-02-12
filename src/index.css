@@ -70,10 +70,10 @@
 
     --color-text-primary: #0f172a;
     /* Slate 900 */
-    --color-text-secondary: #64748b;
+    --color-text-secondary: #475569;
+    /* Slate 600 - Darker for better contrast */
+    --color-text-muted: #64748b;
     /* Slate 500 */
-    --color-text-muted: #94a3b8;
-    /* Slate 400 */
 
     --color-primary: #7c3aed;
     /* Violet 600 */
