@@ -5,11 +5,13 @@ import { Button } from '../../../common/components/Button/Button';
 import { Input } from '../../../common/components/Input/Input';
 import { Trash2, Plus } from 'lucide-react';
 import type { TransactionType } from '../../transactions/types';
+import { ConfirmationModal } from '../../../common/components/Modal/ConfirmationModal';
 
 export const CategoryList: React.FC = () => {
     const { incomeCategories, expenseCategories, addCategory, removeCategory } = useCategories();
     const [newIncome, setNewIncome] = useState('');
     const [newExpense, setNewExpense] = useState('');
+    const [deleteTarget, setDeleteTarget] = useState<{ type: TransactionType; category: string } | null>(null);
 
     const handleAdd = (type: TransactionType) => {
         if (type === 'income' && newIncome.trim()) {
@@ -18,6 +20,17 @@ export const CategoryList: React.FC = () => {
         } else if (type === 'expense' && newExpense.trim()) {
             addCategory('expense', newExpense.trim());
             setNewExpense('');
+        }
+    };
+
+    const handleDeleteClick = (type: TransactionType, category: string) => {
+        setDeleteTarget({ type, category });
+    };
+
+    const handleConfirmDelete = () => {
+        if (deleteTarget) {
+            removeCategory(deleteTarget.type, deleteTarget.category);
+            setDeleteTarget(null);
         }
     };
 
@@ -45,7 +58,7 @@ export const CategoryList: React.FC = () => {
                         }}>
                             <span>{cat}</span>
                             <button
-                                onClick={() => removeCategory('income', cat)}
+                                onClick={() => handleDeleteClick('income', cat)}
                                 style={{ color: 'var(--color-text-muted)', cursor: 'pointer', display: 'flex' }}
                                 title="Remover"
                             >
@@ -78,7 +91,7 @@ export const CategoryList: React.FC = () => {
                         }}>
                             <span>{cat}</span>
                             <button
-                                onClick={() => removeCategory('expense', cat)}
+                                onClick={() => handleDeleteClick('expense', cat)}
                                 style={{ color: 'var(--color-text-muted)', cursor: 'pointer', display: 'flex' }}
                                 title="Remover"
                             >
@@ -88,6 +101,16 @@ export const CategoryList: React.FC = () => {
                     ))}
                 </ul>
             </Card>
+
+            <ConfirmationModal
+                isOpen={!!deleteTarget}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={handleConfirmDelete}
+                title="Excluir Categoria"
+                message={`Tem certeza que deseja excluir a categoria "${deleteTarget?.category}"?`}
+                confirmLabel="Excluir"
+                variant="danger"
+            />
         </div>
     );
 };

@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import type { TransactionType } from '../types';
 import { formatBRL } from '../../../common/utils/formatCurrency';
 import { Trash2 } from 'lucide-react';
 import { Button } from '../../../common/components/Button/Button';
 import { Card } from '../../../common/components/Card/Card';
+import { ConfirmationModal } from '../../../common/components/Modal/ConfirmationModal';
 
 interface TransactionListProps {
     filterType?: TransactionType;
@@ -22,6 +23,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
     category
 }) => {
     const { transactions, removeTransaction } = useTransactions();
+    const [deleteId, setDeleteId] = useState<string | null>(null);
 
     const filteredTransactions = useMemo(() => {
         let result = transactions;
@@ -46,6 +48,17 @@ export const TransactionList: React.FC<TransactionListProps> = ({
         }
         return result;
     }, [transactions, filterType, limit, startDate, endDate, category]);
+
+    const handleDeleteClick = (id: string) => {
+        setDeleteId(id);
+    };
+
+    const handleConfirmDelete = () => {
+        if (deleteId) {
+            removeTransaction(deleteId);
+            setDeleteId(null);
+        }
+    };
 
     if (filteredTransactions.length === 0) {
         return (
@@ -76,7 +89,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => removeTransaction(transaction.id)}
+                                onClick={() => handleDeleteClick(transaction.id)}
                                 aria-label="Delete transaction"
                             >
                                 <Trash2 size={16} color="var(--color-text-muted)" />
@@ -85,6 +98,16 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                     </div>
                 </Card>
             ))}
+
+            <ConfirmationModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleConfirmDelete}
+                title="Excluir Transação"
+                message="Tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita."
+                confirmLabel="Excluir"
+                variant="danger"
+            />
         </div>
     );
 };
