@@ -47,7 +47,7 @@ export const HomePage: React.FC = () => {
                 gap: '2rem',
                 marginBottom: '2rem'
             }}>
-                <div style={{ minWidth: 0 }}> {/* minWidth 0 prevents flex child from overflowing */}
+                <div style={{ minWidth: 0 }}>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '1rem' }}>
                         Despesas por Categoria
                     </h2>
@@ -59,7 +59,6 @@ export const HomePage: React.FC = () => {
                         <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                             Últimas Transações
                         </h2>
-                        {/* Link to view all could go here */}
                     </div>
                     <TransactionList limit={5} startDate={startDate} endDate={endDate} category={category} />
                 </div>
